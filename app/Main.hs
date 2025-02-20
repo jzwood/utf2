@@ -3,6 +3,7 @@
 module Main where
 
 import System.Environment (getArgs)
+import System.IO (getContents)
 import qualified Data.ByteString as B
 import Encode (encode)
 
@@ -19,6 +20,10 @@ main :: IO ()
 main = do
     args <- getArgs
     case args of
-        ["--encode", path] -> B.putStr $ encode path
-        ["--decode", path]  -> B.putStr $ encode path
+        ["--encode"] -> do
+            input <- getContents
+            B.putStr $ encode input
+        --["--decode"] -> do
+            --input <- getContents
+            --B.putStr $ encode input
         _ -> putStrLn usage
