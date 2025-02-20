@@ -1,4 +1,4 @@
-cabal-version:      3.0
+cabal-version:      3.14
 -- The cabal-version field refers to the version of the .cabal specification,
 -- and can be different from the cabal-install (the tool) version and the
 -- Cabal (the library) version you are using. As such, the Cabal (the library)
@@ -68,7 +68,7 @@ executable utf2
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends: base ==4.20.0.0
+    build-depends: base ==4.21.0.0
                  , bytestring ==0.12.2.0
                  , split ==0.2.5
 
