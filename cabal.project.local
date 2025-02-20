@@ -1,0 +1,3 @@
+ignore-project: False
+packages: ./*.cabal
+with-compiler: ghc-9.10.1
