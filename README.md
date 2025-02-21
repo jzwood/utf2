@@ -2,12 +2,11 @@
 
 u vvvv wwww xxxx yyyy zzzz
 
-### Code point ↔ UTF-2 conversion
+### Code point → UTF-2 conversion
 
 | extend | code point |
 |--------|------------|
 | 1 bit  | 1 bit      |
-
 
 ### Example
 
@@ -17,9 +16,38 @@ u vvvv wwww xxxx yyyy zzzz
 
 #### Explanation
 
+
+
+| |1| |0| |0| |1| |0| |1| |0| binary code point |
+|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-------------------|
+|1| |1| |1| |1| |1| |1| |0| | extend bit        |
+|1|1|1|0|1|0|1|1|1|0|1|1|0|0| utf2              |
+
+## CLI
+
 ```
- 1  0  0  1  0  1  0  --> binary codepoint
-1  1  1  1  1  1  0   --> extension bits
-11 10 10 11 10 11 00  --> utf2
-11101011 10110000     --> utf2 bytestring
+Usage: myCli (--encode | --decode) < inputFile > outputFile
+Options:
+  --encode     converts utf8 data to utf2
+  --decode     converts utf2 data to utf8
 ```
+
+
+### Progress
+
+Currently under construction! 🚧
+
+
+    [x] encode
+    [ ] decode
+
+
+
+### local dev
+
+#### Build
+
+- ghc 9.12.1
+- cabal 3.14.1.1
+
+    ./compile.sh
