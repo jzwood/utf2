@@ -16,8 +16,6 @@ u vvvv wwww xxxx yyyy zzzz
 
 #### Explanation
 
-
-
 | |1| |0| |0| |1| |0| |1| |0| binary code point |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|-|-------------------|
 |1| |1| |1| |1| |1| |1| |0| | extend bit        |
@@ -45,9 +43,15 @@ Currently under construction! 🚧
 
 ### local dev
 
-#### Build
+#### pre-reqs
 
 - ghc 9.12.1
 - cabal 3.14.1.1
 
+#### build
+
     ./compile.sh
+
+#### troubleshooting
+
+    xxd -b dest/out.txt
