@@ -3,9 +3,8 @@
 module Main where
 
 import System.Environment (getArgs)
-import System.IO (getContents)
 import qualified Data.ByteString as B
-import Encode (encode)
+import Lib (encode, decode)
 
 usage :: String
 usage =
@@ -23,7 +22,7 @@ main = do
         ["--encode"] -> do
             input <- getContents
             B.putStr $ encode input
-        --["--decode"] -> do
-            --input <- getContents
-            --B.putStr $ encode input
+        ["--decode"] -> do
+            input <- B.getContents
+            putStr $ decode input
         _ -> putStrLn usage
