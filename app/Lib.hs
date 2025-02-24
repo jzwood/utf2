@@ -5,7 +5,7 @@ module Lib where
 import Data.Functor
 import Data.Function
 import Data.Char (ord, chr)
-import Data.List.Split (chunksOf, split, whenElt, keepDelimsR)
+import Data.List.Split (chunksOf)
 import Data.Word (Word8)
 import Data.ByteString (ByteString, pack, unpack)
 
@@ -31,8 +31,15 @@ test = [1,1, 1,0, 0,1, 1,0, 1,1, 0,0, 1,1, 0,0, 0,0, 0,0]
 
 splitUtf2 :: [Bit] -> [[Bit]]
 splitUtf2 bs = chunksOf 2 bs
-             & (split . keepDelimsR . whenElt) (\case [0, _] -> True; _ -> False)
+             & groupUntil (\case [0, _] -> True; _ -> False)
             <&> concatMap (\case [_, x] -> [x]; x -> x)
+
+groupUntil :: (a -> Bool) -> [a] -> [[a]]
+groupUntil p xs = foldl' (alg p) [[]] xs <&> reverse & reverse
+  where
+    alg :: (a -> Bool) -> [[a]] -> a -> [[a]]
+    alg _ [] _ = []
+    alg p' (hs:ts') x = let ts = (x:hs):ts' in if p' x then []:ts else ts
 
 toByte :: Int -> Word8
 toByte = toEnum

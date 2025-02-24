@@ -9,7 +9,7 @@ import Lib (encode, decode)
 usage :: String
 usage =
     """
-    Usage: utf2 (--encode | --decode) <fpath>
+    Usage: utf2 (--encode | --decode) < inputFile > outputFile
     Options:
       --encode     converts utf8 data to utf2
       --decode     converts utf2 data to utf8
