@@ -35,7 +35,7 @@ test = [1,1, 1,0, 0,1, 1,0, 1,1, 0,0, 1,1, 0,0, 0,0, 0,0]
 splitUtf2 :: [Bit] -> [[Bit]]
 splitUtf2 bs = chunksOf 2 bs
              & groupUntil (\case [0, _] -> True; _ -> False)
-            <&> concatMap (\case [_, x] -> [x]; x -> x)
+            <&> concatMap (\case [_, x] -> [x]; _ -> [])
 
 groupUntil :: (a -> Bool) -> [a] -> [[a]]
 groupUntil p xs = foldl' (alg p) [[]] xs <&> reverse & reverse
@@ -43,6 +43,7 @@ groupUntil p xs = foldl' (alg p) [[]] xs <&> reverse & reverse
     alg :: (a -> Bool) -> [[a]] -> a -> [[a]]
     alg _ [] _ = []
     alg p' (hs:ts') x = let ts = (x:hs):ts' in if p' x then []:ts else ts
+-- TODO fix: groupUntil (==3) [1,2,3]
 
 padLeft :: a -> Int -> [a] -> [a]
 padLeft c n xs = replicate (n - length xs) c ++ xs
@@ -73,7 +74,11 @@ preEncode bs =
     _ -> []
 
 preDecode :: [Bit] -> [Bit]
-preDecode = undefined
+preDecode (1:1:0:0:0:0:0:0:bs) = bs
+preDecode (1:0:0:0:0:0:bs) = bs
+preDecode (0:1:0:0:bs) = bs
+preDecode (0:0:bs) = bs
+preDecode bs = bs
 
 encode :: String -> ByteString
 encode "" = ""
@@ -87,15 +92,19 @@ decode :: ByteString -> String
 decode "" = ""
 decode bs = bs
           & fromBytes
-        >>= toBin
+        >>= toBin -- maybe change to (padLeft 0 8 . toBin)
           & splitUtf2 . preDecode
          <&> (chr . toDec)
+
+
+-- (splitUtf2 . preDecode) ((fromBytes bs) >>= toBin)
 
 -- J\n
 -- 11101011 10110011 10110000
 -- 11101011 10110011 10110000
 -- 11101011 10110011 10110000
--- 11101011 10110011 10110000
+--   111010 11101100 1110110000
+-- 00111010 11101100 11101100
 
 -- J = 1001010  code point
 --     11 10 10 11 10 11 00
