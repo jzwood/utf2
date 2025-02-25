@@ -21,8 +21,9 @@ toBin x = reverse $ bin x
     bin 0 = []
     bin n = let (q,r) = n `divMod` 2 in r : bin q
 
-toDec :: [Int] -> Int
-toDec xs = sum $ zipWith (*) [128, 64, 32, 16, 8, 4, 2, 1] (padLeft 0 8 xs)
+toDec :: [Bit] -> Int
+toDec xs = sum $ zipWith (*) powOf2 (reverse xs)
+  where powOf2 = [2^x | x <- ([0..] :: [Int])]
 
 toUtf2 :: [Bit] -> [Bit]
 toUtf2 [] = []
@@ -98,7 +99,7 @@ decode :: ByteString -> String
 decode "" = ""
 decode bs = bs
           & fromBytes
-        >>= padLeft 0 8 . toBin
+        >>= padLeft 0 8 . toBin -- something is fishy here. why padLeft?
           & splitUtf2 . preDecode
          <&> (chr . toDec)
 
