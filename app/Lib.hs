@@ -13,18 +13,19 @@ type Bit = Int
 
 toBin :: Int -> [Bit]
 toBin 0 = [0]
-toBin x = bin x
+toBin x = reverse $ bin x
   where
     bin :: Int -> [Bit]
     bin 0 = []
     bin n = let (q,r) = n `divMod` 2 in r : bin q
 
 toDec :: [Int] -> Int
-toDec xs = sum $ zipWith (*) [128, 64, 32, 16, 8, 4, 2, 1] xs
+toDec xs = sum $ zipWith (*) [128, 64, 32, 16, 8, 4, 2, 1] (padLeft 0 8 xs)
 
 toUtf2 :: [Bit] -> [Bit]
 toUtf2 [] = []
-toUtf2 (x:xs) = reverse $ x : 0 : (xs >>= (:[1]))
+toUtf2 [x] = [0, x]
+toUtf2 (x:xs) = 1:x:toUtf2 xs
 
 test :: [Int]
 test = [1,1, 1,0, 0,1, 1,0, 1,1, 0,0, 1,1, 0,0, 0,0, 0,0]
@@ -40,6 +41,9 @@ groupUntil p xs = foldl' (alg p) [[]] xs <&> reverse & reverse
     alg :: (a -> Bool) -> [[a]] -> a -> [[a]]
     alg _ [] _ = []
     alg p' (hs:ts') x = let ts = (x:hs):ts' in if p' x then []:ts else ts
+
+padLeft :: a -> Int -> [a] -> [a]
+padLeft c n xs = replicate (n - length xs) c ++ xs
 
 toByte :: Int -> Word8
 toByte = toEnum
@@ -59,7 +63,8 @@ fromBytes bs = bs
 
 encode :: String -> ByteString
 encode cs = cs
-        >>= (chunksOf 8 . toUtf2 . toBin . ord)
+        >>= (toUtf2 . toBin . ord)
+          & chunksOf 8
          <&> toDec
           & toBytes
 
@@ -70,8 +75,11 @@ decode bs = bs
           & splitUtf2
          <&> (chr . toDec)
 
-
--- 1110 1011 1011 00
+-- J\n
+-- 11101011 10110011 10110000
+-- 11101011 10110011 10110000
+-- 11101011 10110011 10110000
+-- 11101011 10110011 10110000
 
 -- J = 1001010  code point
 --     11 10 10 11 10 11 00
