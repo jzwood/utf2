@@ -38,12 +38,18 @@ splitUtf2 bs = chunksOf 2 bs
             <&> concatMap (\case [_, x] -> [x]; _ -> [])
 
 groupUntil :: (a -> Bool) -> [a] -> [[a]]
-groupUntil p xs = foldl' (alg p) [[]] xs <&> reverse & reverse
-  where
+groupUntil p xs =
+  let
     alg :: (a -> Bool) -> [[a]] -> a -> [[a]]
     alg _ [] _ = []
-    alg p' (hs:ts') x = let ts = (x:hs):ts' in if p' x then []:ts else ts
--- TODO fix: groupUntil (==3) [1,2,3]
+    alg p' (h:ts') x = let ts = (x:h):ts' in if p' x then []:ts else ts
+  in foldl' (alg p) [[]] xs & pop null <&> reverse & reverse
+
+pop :: (a -> Bool) -> [a] -> [a]
+pop _ [] = []
+pop p xs@(h:ts)
+  | p h = ts
+  | otherwise = xs
 
 padLeft :: a -> Int -> [a] -> [a]
 padLeft c n xs = replicate (n - length xs) c ++ xs
@@ -66,7 +72,7 @@ fromBytes bs = bs
 
 preEncode :: [Bit] -> [Bit]
 preEncode bs =
-  (++bs) $ case (length bs `mod` 8) of
+  (++bs) $ case length bs `mod` 8 of
     0 -> [1, 1, 0, 0, 0, 0, 0, 0]
     2 -> [1, 0, 0, 0, 0, 0]
     4 -> [0, 1, 0, 0]
