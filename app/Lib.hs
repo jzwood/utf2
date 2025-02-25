@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE LambdaCase #-}
 
 module Lib where
@@ -7,7 +8,8 @@ import Data.Function
 import Data.Char (ord, chr)
 import Data.List.Split (chunksOf)
 import Data.Word (Word8)
-import Data.ByteString (ByteString, pack, unpack)
+import Data.ByteString (ByteString)
+import qualified Data.ByteString as B
 
 type Bit = Int
 
@@ -54,25 +56,39 @@ fromByte = fromEnum
 toBytes :: [Int] -> ByteString
 toBytes xs = xs
           <&> toByte
-           & pack
+           & B.pack
 
 fromBytes :: ByteString -> [Int]
 fromBytes bs = bs
-             & unpack
+             & B.unpack
             <&> fromByte
 
+preEncode :: [Bit] -> [Bit]
+preEncode bs =
+  (++bs) $ case (length bs `mod` 8) of
+    0 -> [1, 1, 0, 0, 0, 0, 0, 0]
+    2 -> [1, 0, 0, 0, 0, 0]
+    4 -> [0, 1, 0, 0]
+    6 -> [0, 0]
+    _ -> []
+
+preDecode :: [Bit] -> [Bit]
+preDecode = undefined
+
 encode :: String -> ByteString
+encode "" = ""
 encode cs = cs
         >>= (toUtf2 . toBin . ord)
-          & chunksOf 8
+          & chunksOf 8 . preEncode
          <&> toDec
           & toBytes
 
 decode :: ByteString -> String
+decode "" = ""
 decode bs = bs
           & fromBytes
         >>= toBin
-          & splitUtf2
+          & splitUtf2 . preDecode
          <&> (chr . toDec)
 
 -- J\n
