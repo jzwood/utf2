@@ -98,7 +98,7 @@ decode :: ByteString -> String
 decode "" = ""
 decode bs = bs
           & fromBytes
-        >>= toBin -- maybe change to (padLeft 0 8 . toBin)
+        >>= padLeft 0 8 . toBin
           & splitUtf2 . preDecode
          <&> (chr . toDec)
 
