@@ -30,9 +30,6 @@ toUtf2 [] = []
 toUtf2 [x] = [0, x]
 toUtf2 (x:xs) = 1:x:toUtf2 xs
 
-test :: [Int]
-test = [1,1, 1,0, 0,1, 1,0, 1,1, 0,0, 1,1, 0,0, 0,0, 0,0]
-
 splitUtf2 :: [Bit] -> [[Bit]]
 splitUtf2 bs = chunksOf 2 bs
              & groupUntil (\case [0, _] -> True; _ -> False)
@@ -99,22 +96,13 @@ decode :: ByteString -> String
 decode "" = ""
 decode bs = bs
           & fromBytes
-        >>= padLeft 0 8 . toBin -- something is fishy here. why padLeft?
+        >>= toBin
           & splitUtf2 . preDecode
          <&> (chr . toDec)
 
 
--- (splitUtf2 . preDecode) ((fromBytes bs) >>= toBin)
-
--- J\n
--- 11101011 10110011 10110000
--- 11101011 10110011 10110000
--- 11101011 10110011 10110000
---   111010 11101100 1110110000
--- 00111010 11101100 11101100
-
--- J = 1001010  code point
---     11 10 10 11 10 11 00
---     11101011 10110000
-
--- :%!xxd -b
+-- ab 1100001 1100010 1010
+-- 11111010101001 11111010101100 11101100
+--
+-- 01001111 10101010 01111110 10101100 11101100  EXPECTED
+-- 01001111 10101010 01111110 10101100 11101100  ACTUAL
