@@ -30,8 +30,8 @@ toUtf2 [] = []
 toUtf2 [x] = [0, x]
 toUtf2 (x:xs) = 1:x:toUtf2 xs
 
-splitUtf2 :: [Bit] -> [[Bit]]
-splitUtf2 bs = chunksOf 2 bs
+fromUtf2 :: [Bit] -> [[Bit]]
+fromUtf2 bs = chunksOf 2 bs
              & groupUntil (\case [0, _] -> True; _ -> False)
             <&> concatMap (\case [_, x] -> [x]; _ -> [])
 
@@ -97,5 +97,5 @@ decode "" = ""
 decode bs = bs
           & fromBytes
         >>= padLeft 0 8 . toBin
-          & splitUtf2 . preDecode
+          & fromUtf2 . preDecode
          <&> (chr . toDec)
