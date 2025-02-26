@@ -50,7 +50,7 @@ pop p xs@(h:ts)
   | otherwise = xs
 
 padLeft :: a -> Int -> [a] -> [a]
-padLeft c n xs = replicate ((-length xs) `mod` n) c ++ xs
+padLeft c n xs = replicate (n - length xs) c ++ xs
 
 toByte :: Int -> Word8
 toByte = toEnum
