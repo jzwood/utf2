@@ -70,6 +70,7 @@ executable utf2
     -- Other library packages from which modules are imported.
     build-depends: base ==4.21.0.0
                  , bytestring ==0.12.2.0
+                 , HUnit ==1.6.2.0
                  , split ==0.2.5
 
     -- Directories containing source files.
@@ -77,3 +78,10 @@ executable utf2
 
     -- Base language which the package is written in.
     default-language: GHC2021
+
+test-suite utf2-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test, app
+  main-is:             Main.hs
+  other-modules:       Lib
+  build-depends:       base, bytestring, HUnit, split
