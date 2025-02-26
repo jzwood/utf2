@@ -72,6 +72,7 @@ executable utf2
                  , bytestring ==0.12.2.0
                  , HUnit ==1.6.2.0
                  , split ==0.2.5
+                 , QuickCheck ==2.15.0.1
 
     -- Directories containing source files.
     hs-source-dirs: app
@@ -84,4 +85,4 @@ test-suite utf2-test
   hs-source-dirs:      test, app
   main-is:             Main.hs
   other-modules:       Lib
-  build-depends:       base, bytestring, HUnit, split
+  build-depends:       base, bytestring, split, HUnit, QuickCheck

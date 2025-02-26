@@ -1,6 +1,7 @@
 module Main where
 
 import Test.HUnit
+import Test.QuickCheck
 import Lib
 
 toBinTests :: Test
@@ -27,8 +28,17 @@ roundTripTests = TestList
       , TestCase $ assertEqual "round trip" (decode $ encode "so cool 😭 ~~~ !! 😴\n") "so cool 😭 ~~~ !! 😴\n"
       ]
 
+prop_decode_encode :: String -> Bool
+prop_decode_encode xs = decode (encode xs) == xs
+
+propTests :: Test
+--propTests = TestCase (quickCheck prop_decode_encode)
+propTests = TestCase (quickCheckWith stdArgs {maxSuccess = 1000} prop_decode_encode)
+
+
+
 tests :: Test
-tests = TestList [ toBinTests, toDecTests, roundTripTests]
+tests = TestList [ toBinTests, toDecTests, roundTripTests, propTests]
 
 main :: IO ()
 main = runTestTTAndExit tests
