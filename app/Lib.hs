@@ -96,13 +96,6 @@ decode :: ByteString -> String
 decode "" = ""
 decode bs = bs
           & fromBytes
-        >>=  padLeft 0 8 . toBin
+        >>= padLeft 0 8 . toBin
           & splitUtf2 . preDecode
          <&> (chr . toDec)
-
-
--- ab 1100001 1100010 1010
--- 11111010101001 11111010101100 11101100
---
--- 01001111 10101010 01111110 10101100 11101100  EXPECTED
--- 01001111 10101010 01111110 10101100 11101100  ACTUAL

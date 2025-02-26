@@ -4,9 +4,12 @@ u vvvv wwww xxxx yyyy zzzz
 
 ### Code point → UTF-2 conversion
 
-| extend | code point |
-|--------|------------|
-| 1 bit  | 1 bit      |
+| bits short of byte boundary | prepended bits | extend bit | code point bit | |
+|---|-------------|---|---|--------|
+| 0 | 11 00 00 00 | e | z | {e, z} |
+| 6 | 10 00 00    |   |   |        |
+| 4 | 01 00       |   |   |        |
+| 2 | 00          |   |   |        |
 
 ### Example
 
@@ -16,11 +19,11 @@ u vvvv wwww xxxx yyyy zzzz
 
 #### Explanation
 
-| |1| |0| |0| |1| |0| |1| |0| binary code point |
-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-------------------|
-|1| |1| |1| |1| |1| |1| |0| | extend bit        |
-|1|1|1|0|1|0|1|1|1|0|1|1|0|0| utf2              |
-
+```
+    1  0  0  1  0  1  0  --> code point
+   11 10 10 11 10 11 00  --> extend bits
+00 11 10 10 11 10 11 00  --> prepend bits
+```
 ## CLI
 
 ```
