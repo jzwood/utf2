@@ -37,8 +37,8 @@ Currently under construction! 🚧
 
 
     [x] encode
-    [ ] decode
-
+    [x] decode
+    [ ] testing
 
 
 ### local dev

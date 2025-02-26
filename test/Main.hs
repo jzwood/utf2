@@ -20,9 +20,11 @@ toDecTests = TestList
 roundTripTests :: Test
 roundTripTests = TestList
       [ TestCase $ assertEqual "round trip" (decode $ encode "J\n") "J\n"
-      , TestCase $ assertEqual "round trip" (decode $ encode "ab") "ab"
       , TestCase $ assertEqual "round trip" (decode $ encode "😁") "😁"
+      , TestCase $ assertEqual "round trip" (decode $ encode "ab") "ab"
       , TestCase $ assertEqual "round trip" (decode $ encode "hello world") "hello world"
+      , TestCase $ assertEqual "round trip" (decode $ encode "😂😎😜") "😂😎😜"
+      , TestCase $ assertEqual "round trip" (decode $ encode "so cool 😭 ~~~ !! 😴\n") "so cool 😭 ~~~ !! 😴\n"
       ]
 
 tests :: Test
