@@ -25,7 +25,7 @@ roundTripTests = TestList
       , TestCase $ assertEqual "round trip" (decode $ encode "ab") "ab"
       , TestCase $ assertEqual "round trip" (decode $ encode "hello world") "hello world"
       , TestCase $ assertEqual "round trip" (decode $ encode "😂😎😜") "😂😎😜"
-      , TestCase $ assertEqual "round trip" (decode $ encode "so cool 😭 ~~~ !! 😴\n") "so cool 😭 ~~~ !! 😴\n"
+      , TestCase $ assertEqual "round trip" (decode $ encode "so sad 😭 ~~~ !! 😴\n") "so sad 😭 ~~~ !! 😴\n"
       ]
 
 prop_decode_encode :: String -> Bool
